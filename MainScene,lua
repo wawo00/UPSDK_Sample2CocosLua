@@ -1,0 +1,406 @@
+
+local MainScene = class("MainScene", cc.load("mvc").ViewBase)
+--MainScene.sscount = 0
+--MainScene.luaj = require "luaj"
+--require "cocos.Cocos2d.Cocos2d"
+--local luaj = require "cocos.cocos2d.luaj"
+local upltv = require "src.app.views.UPLTV"
+--local ooo = require "cocos.cocos2d.test"
+
+local function createBtnAt(self, left, top, fontsize, text) 
+    local btn = ccui.Button:create("feedback.png", "feedback_active.png")
+    btn:move(left, top)
+    btn:addTo(self)
+    btn:setTitleText(text)  
+    btn:setTitleFontSize(fontsize)  
+    btn:setTitleColor(cc.c3b(255, 255, 255)) 
+    return btn
+end
+
+function MainScene:onCreate()
+    -- add background image
+    local offtop = 220
+    display.newSprite("HelloWorld.png")
+        :move(display.cx, display.cy + 00 - offtop)
+        :addTo(self)
+
+    -- add HelloWorld label
+    -- cc.Label:createWithSystemFont("Hello World", "Arial", 40)
+    --     :move(display.cx, display.cy - 100- offtop)
+    --     :addTo(self)
+
+    cc.Label:createWithSystemFont("Hello Lua, By Sam!", "Arial", 20)
+        :move(display.cx, display.cy - 80- offtop)
+        :addTo(self)
+
+    local left = display.left + 140
+    local top = display.top - 90
+    local starttop = top
+    local startleft = left
+    local disht = 85
+    local diswd = 215
+    local fontsize = 20
+    -- 第一列
+    local btn = createBtnAt(self, left, top, fontsize, "init")  
+    btn:addTouchEventListener(function(sender, eventType)  
+        if (2 == eventType) then  
+              --print("=====> btn up")  
+            upltv:setCustomerId("666666")
+             local zone = 0
+             local callback = function(r)  
+                if r == true then
+                    print("===> initSDK success") 
+                else
+                    print("===> initSDK fail") 
+                end
+                
+            end
+             upltv:initSDK(zone, callback)
+        end  
+    end)
+    
+    -- initAbtConfigJson
+    top = top - disht
+    local btninitAbtConfigJson = createBtnAt(self, left, top, fontsize, "initABtest")
+    btninitAbtConfigJson:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+                print("=====> initAbtConfigJson btn up")  
+                upltv:initAbtConfigJson("u89731", true, 0, "Facebook", "M", -1, {"This is the first element.", "The second one.", "The last one."})
+        end  
+    end)
+
+    -- getAbtConfigJson
+    top = top - disht
+    local btngetAbtConfigJson = createBtnAt(self, left, top, fontsize, "getAbtConfig")
+    btngetAbtConfigJson:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+                print("=====> getAbtConfig btn up")  
+                local r = upltv:getAbtConfig("pass")
+                print("=====> getAbtConfig r:" .. type(r))
+        end  
+    end)
+    
+    -- 第二列
+    -- show reward debug ui
+    top = starttop
+    left = startleft + diswd 
+    local btnshowvideoActivity = createBtnAt(self, left, top, fontsize, "rdDebugUi")
+    btnshowvideoActivity:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+                print("=====> btnshowvideoActivity btn up")  
+                upltv:showRewardDebugUI()
+        end  
+    end)
+
+    -- load reward callback
+    top = top - disht
+    local btnshowvideoActivity = createBtnAt(self, left, top, fontsize, "rdLoadCall")
+    btnshowvideoActivity:addTouchEventListener(function(sender, eventType)  
+        if  (2== eventType) then  
+                
+                upltv:setRewardVideoLoadCallback(function(cpadid,msg)  print("=====>RewardVideoLoadCallback success at " .. cpadid) end,
+                function(cpadid, msg) print("=====> RewardVideoLoadCallback fail at " .. cpadid .. " because of " .. msg) end)
+        end  
+    end)
+
+    -- show reward callback
+    top = top - disht
+    local btnshowvideoActivity = createBtnAt(self, left, top, fontsize, "rdShowCall")
+    btnshowvideoActivity:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+            local function rewardShowCall(type, cpadid) 
+                local event = "unkown"
+                if type == upltv.AdEventType.VIDEO_EVENT_DID_SHOW then
+                    event = "Did_Show"
+                elseif type == upltv.AdEventType.VIDEO_EVENT_DID_CLICK then
+                    event = "Did_Click"
+                elseif type == upltv.AdEventType.VIDEO_EVENT_DID_CLOSE then
+                    event = "Did_Close"
+                elseif type == upltv.AdEventType.VIDEO_EVENT_DID_GIVEN_REWARD then
+                    event = "Did_Given_Reward"
+                elseif type == upltv.AdEventType.VIDEO_EVENT_DID_ABANDON_REWARD then
+                    event = "Did_Abandon_Reward"
+                end
+                print("=====> RewardVideo show call Event:" .. event ..", at :" .. cpadid)
+            end 
+            
+            upltv:setRewardVideoShowCallback(rewardShowCall)
+        end  
+    end)
+
+    -- check if reward is ready
+    top = top - disht
+    local btnloadvideo = createBtnAt(self, left, top, fontsize, "rdReady")   
+    btnloadvideo:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+                --print("=====> btn up")  
+                local r = upltv:isRewardReady() 
+                if (r==true) then
+                    print("=====> btn up isRewardReady: true")
+                else
+                    print("=====> btn up isRewardReady: false")
+                end
+                
+        end  
+    end)
+
+    -- show one reward ad
+    top = top - disht
+    local btnloadvideo = createBtnAt(self, left, top, fontsize, "rdShow")   
+    btnloadvideo:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+                --print("=====> btn up")  
+                local r = upltv:isRewardReady() 
+                if (r==true) then
+                    upltv:showRewardVideo("show_reward")
+                    print("=====> btn up isRewardReady: true")
+                else
+                    print("=====> btn up isRewardReady: false")
+                end
+                
+        end  
+    end)
+
+    -- 第三列, 插屏广告测试
+    top = starttop
+    left = startleft + diswd * 2 
+    
+    local ilPlaceId = "Interstitial_LevelPass"
+    if (device.platform == "android") then
+        ilPlaceId = "inter_aaa"
+    end
+    
+    -- show inter debug ui
+    local btnshowInterActivity = createBtnAt(self, left, top, fontsize, "iLDebugUI")
+    btnshowInterActivity:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+                print("=====> showInterstitialDebugUI btn up")  
+                upltv:showInterstitialDebugUI()
+        end  
+    end)
+
+    -- set Interstitial LoadCallback
+    top = top - disht
+    local btnInterstitialLoadCall = createBtnAt(self, left, top, fontsize, "iLLoadCall")
+    btnInterstitialLoadCall:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+                print("=====> setInterstitialLoadCallback btn up")  
+                upltv:setInterstitialLoadCallback(ilPlaceId,
+                function(cpadid,msg) print("=====> InterstitialLoad Success at:" .. cpadid) end, 
+                function(cpadid,msg) print("=====> InterstitialLoad Fail at:" .. cpadid .. ",because of " .. msg) end
+                )
+        end  
+    end)
+
+    -- set Interstitial Show Callback
+    top = top - disht
+    local btnInterstitialShowCall = createBtnAt(self, left, top, fontsize, "iLShowCall")
+    btnInterstitialShowCall:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+            print("=====> setInterstitialShowCallback btn up")  
+            local function ilShowCall(type, cpadid)
+                local event = "unkown"
+                if type == upltv.AdEventType.INTERSTITIAL_EVENT_DID_SHOW then
+                    event = "Did_Show"
+                elseif type == upltv.AdEventType.INTERSTITIAL_EVENT_DID_CLICK then
+                    event = "Did_Click"
+                elseif type == upltv.AdEventType.INTERSTITIAL_EVENT_DID_CLOSE then
+                    event = "Did_Close"
+                end
+                print("=====> Interstitial ShowCall Event:" .. event ..", at :" .. cpadid)
+            end
+
+            upltv:setInterstitialShowCallback(ilPlaceId, ilShowCall)
+        end  
+    end)
+
+    -- show Interstitial Ad asyn
+    top = top - disht
+    local btnInterstitialShow = createBtnAt(self, left, top, fontsize, "iLReadyAsyn")
+    btnInterstitialShow:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+        print("=====> isInterstitialReadyAsyn btn up")  
+        upltv:isInterstitialReadyAsyn(ilPlaceId, function(r) 
+            if r == true then
+                print("=====> Interstitial is ready")
+            else
+                print("=====> Interstitial is not ready")
+            end
+        end)   
+        end  
+    end)
+
+    -- show Interstitial Ad
+    top = top - disht
+    local btnInterstitialShow = createBtnAt(self, left, top, fontsize, "iLShow")
+    btnInterstitialShow:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+            print("=====> isInterstitialReady btn up")  
+            if upltv:isInterstitialReady(ilPlaceId) == true then
+                print("=====> Interstitial is ready") 
+                upltv:showInterstitialAd(ilPlaceId)
+            else
+                print("=====> Interstitial is not ready") 
+            end
+            
+        end  
+    end)
+
+    -- 第四列，显示banner的测试
+    top = starttop
+    left = startleft + diswd*3 
+
+    local btnsetbannercall = createBtnAt(self, left, top, fontsize, "bannerCall")
+    btnsetbannercall:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+            print("=====> setBannerShowCall btn up")  
+            local function bannerShowCall(type, cpadid) 
+                local event = "unkown"
+                if type == upltv.AdEventType.BANNER_EVENT_DID_SHOW then
+                    event = "Did_Show"
+                elseif type == upltv.AdEventType.BANNER_EVENT_DID_CLICK then
+                    event = "Did_Click"
+                elseif type == upltv.AdEventType.BANNER_EVENT_DID_REMOVED then
+                    event = "Did_Removed"
+                end
+                print("=====> banner ShowCall Event:" .. event ..", at :" .. cpadid)
+            end
+           
+            upltv:setBannerShowCallback("banner_aaa", 
+                bannerShowCall)
+
+            upltv:setBannerShowCallback("banner_bbb", 
+                bannerShowCall)
+        end  
+    end) 
+
+    -- show top banner
+    top = top - disht
+    local btnshowtopbanner = createBtnAt(self, left, top, fontsize, "topBanner")
+    btnshowtopbanner:addTouchEventListener(function(sender, eventType)  
+       if  (2 == eventType) then  
+             print("=====> showBannerAdAtTop btn up")  
+             upltv:setTopBannerPadingForIphonex(50)
+             upltv:showBannerAdAtTop("banner_aaa")
+             
+       end  
+   end)
+
+    -- show bottom banner
+    top = top - disht
+    local btnshowbottombanner = createBtnAt(self, left, top, fontsize, "bottomBanner")
+    btnshowbottombanner:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+                print("=====> showBannerAdAtBottom btn up")  
+                upltv:showBannerAdAtBottom("banner_bbb")
+        end  
+    end)
+
+    -- hide all banner
+    top = top - disht
+    local btnhideallbanner = createBtnAt(self, left, top, fontsize, "hideAll")
+    btnhideallbanner:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+                print("=====> hideAllBanner btn up")  
+                upltv:hideBannerAdAtBottom()
+                upltv:hideBannerAdAtTop()
+        end  
+    end)
+
+    -- hide all banner
+    top = top - disht
+    local btnremoveallbanner = createBtnAt(self, left, top, fontsize, "removeAll")
+    btnremoveallbanner:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+                print("=====> removeBannerAdAt btn up")  
+                upltv:removeBannerAdAt("banner_bbb")
+                upltv:removeBannerAdAt("banner_aaa")
+        end  
+    end)
+    
+    --[[]]
+    
+    top = starttop
+    left = startleft + diswd*4 
+    
+    -- set android mainfest's pkg
+    local btnsetAndroidPkg = createBtnAt(self, left, top, fontsize, "setPkg")
+    btnsetAndroidPkg:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+             print("=====> setManifestPackageName btn up")  
+             upltv:setManifestPackageName("com.avidly.ads")
+        end  
+    end)
+
+    -- onBackPressed
+    top = top - disht
+    local btnonBackPressed = createBtnAt(self, left, top, fontsize, "onBackPressed")
+    btnonBackPressed:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+             print("=====> onBackPressed btn up")  
+             upltv:setBackPressedCallback(function(type, msg) 
+                local event = "unkown"
+                if type == upltv.AdEventType.EXITAD_EVENT_DID_SHOW then
+                    event = "Did_Show"
+                elseif type == upltv.AdEventType.EXITAD_EVENT_DID_CLICK then
+                    event = "Did_Click"
+                elseif type == upltv.AdEventType.EXITAD_EVENT_DID_CLICKMORE then
+                    event = "Did_ClickMore"
+                elseif type == upltv.AdEventType.EXITAD_EVENT_DID_EXIT then
+                    event = "Did_Exit"
+                elseif type == upltv.AdEventType.EXITAD_EVENT_DID_CANCEL then
+                    event = "Did_Cancel"
+                end
+                print("=====> ExitAd show call Event:" .. event ..", at :" .. cpadid)
+            end)
+                
+             upltv:onBackPressed()
+        end  
+    end)
+   
+    -- loadAnroidAdsByManual
+    top = top - disht
+    local btnloadByManual = createBtnAt(self, left, top, fontsize, "loadByManual")
+    btnloadByManual:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+            print("=====> loadAdsByManual btn up")  
+            upltv:loadAdsByManual()
+        end  
+    end)
+
+    -- exitApp
+    top = top - disht
+    local btnloadByManual = createBtnAt(self, left, top, fontsize, "exitApp")
+    btnloadByManual:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+            print("=====> exitApp btn up")  
+            upltv:exitApp()
+        end  
+    end)
+
+    -- GDPR
+    top = top - disht
+    local btnloadByManual = createBtnAt(self, left, top, fontsize, "GDPR")
+    btnloadByManual:addTouchEventListener(function(sender, eventType)  
+        if  (2 == eventType) then  
+            print("=====> GDPR btn up")  
+            local function rback(r) 
+                print("=====> lua isEuropeanUnionUser callback: " .. r .. ",type:" .. type(r))
+            end
+            upltv:isEuropeanUnionUser(rback)
+            local e = upltv:getAccessPrivacyInfoStatus()
+            print("=====> lua getAccessPrivacyInfoStatus status: " .. e)  
+            upltv:updateAccessPrivacyInfoStatus(0)
+            -- -- upltv:updateAccessPrivacyInfoStatus(upltv.GDPRPermissionEnum.UPAccessPrivacyInfoStatusDefined)
+            upltv:notifyAccessPrivacyInfoStatus(function(value)  
+                print("=====> lua notifyAccessPrivacyInfoStatus callback: " .. value) 
+            end)
+        end  
+    end)
+ 
+end
+
+
+
+
+return MainScene
