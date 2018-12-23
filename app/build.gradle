@@ -113,6 +113,19 @@ def getCocosCommandPath() {
     }
 }
 
+
+task P() {
+    File path=new File("${buildDir}/../../../../../src")
+
+    File file2 = new File(path, 'app/views')
+    File[] files=file2.listFiles()
+    for (int i = 0; i < files.length; i++) {
+        println "路径是"+files[i].getAbsolutePath()
+
+    }
+
+}
+
 // a method used to invoke the cocos luacompile command
 def compileLua(srcDir, dstDir, doCompile, is64bit, doEncrypt) {
     def compileArgs = ['luacompile', '-s', srcDir, '-d', dstDir]
@@ -152,17 +165,19 @@ android.applicationVariants.all { variant ->
         copy {
             from "${buildDir}/../../../../../res"
             into "${buildDir}/intermediates/assets/${variant.dirName}/res"
+            println "path:" + "${buildDir}/../../../../../src"
         }
 
         copy {
             from "${buildDir}/../../../../../src"
             into "${buildDir}/intermediates/assets/${variant.dirName}/src"
+            println "path:" + "${buildDir}/../../../../../src"
         }
 
         // copy {
         //     from "${buildDir}/../../../../cocos2d-x/cocos/scripting/lua-bindings/script"
         //     into  "${buildDir}/intermediates/assets/${variant.dirName}/src/cocos"
-        // }
+        //  }
 
         // compile & encrypt the scripts if necessary
         def compileScript = (variant.name.compareTo('release') == 0)
@@ -247,25 +262,16 @@ dependencies {
     compile(name: 'UPAdsSdk_CocosLua_3.0.06_dex', ext: 'aar')
     //networks
     compile(name: 'adcolony_ads', ext: 'aar')
-    compile(name: 'amazon_ads', ext: 'aar')
     compile(name: 'applovin_ads', ext: 'aar')
-    compile(name: 'appnext_ads', ext: 'aar')
-    compile(name: 'appnext_core', ext: 'aar')
     compile(name: 'chartboost_ads', ext: 'aar')
+    compile(name: 'displayio_ads', ext: 'aar')
+    compile(name: 'facebook_exo_player', ext: 'aar')
+    compile(name: 'facebook_ads', ext: 'aar')
     compile(name: 'ironsource_ads', ext: 'aar')
     compile(name: 'mobvista_ads', ext: 'aar')
-    compile(name: 'tapjoy_ads', ext: 'aar')
     compile(name: 'unity_ads', ext: 'aar')
     compile(name: 'vungle_ads', ext: 'aar')
     compile(name: 'youappi_ads', ext: 'aar')
-    compile(name: 'facebook_exo_player', ext: 'aar')
-    compile(name: 'facebook_ads', ext: 'aar')
-
-    //dap
-    compile(name: 'dap_ads_cw', ext: 'aar')
-    compile(name: 'dap_ads_vd', ext: 'aar')
-    compile(name: 'palette-v7-26.1.0', ext: 'aar')
-
 
     //support-libs
     compile(name: 'gson-2.7', ext: 'jar')
