@@ -4,7 +4,7 @@
 将app.rar解压到\src文件夹中以实现其功能。
 
 
-![image](https://github.com/wawo00/UPSDK_Sample2CocosLua/tree/3006_domestic/img/111.png)
+![image](https://github.com/wawo00/UPSDK_Sample2CocosLua/blob/3006_domestic/img/111.png)
       
 
 详细信息请查看[文档](http://docs.upltv.com/zh/master/chapters/chapter05.html "文档")
