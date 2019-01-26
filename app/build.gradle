@@ -42,6 +42,11 @@ android {
             }
         }
     }
+    dexOptions {
+        preDexLibraries false
+        incremental false
+        javaMaxHeapSize "3072m"
+    }
 
     sourceSets.main {
         java.srcDir "src"
