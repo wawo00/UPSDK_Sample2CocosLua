@@ -248,6 +248,8 @@ dependencies {
     //core-lib
     compile(name: 'UPAdsSdk_CocosLua_3.0.06_dex', ext: 'aar')
     //networks
+    compile(name: 'baidu_ads', ext: 'aar')
+    compile(name: 'sigmob_ads', ext: 'aar')
     compile(name: 'mintegral_ads', ext: 'aar')
     compile(name: 'oneway_ads', ext: 'aar')
     compile(name: 'playable_ads', ext: 'aar')
