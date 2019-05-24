@@ -246,7 +246,7 @@ dependencies {
 
 //    compile fileTree(dir: 'libs', include: ['*.jar','*.aar'])
     //core-lib
-    compile(name: 'UPAdsSdk_CocosLua_3.0.06_dex', ext: 'aar')
+    compile(name: 'UPAdsSdk_CocosLua_3.0.07_dex', ext: 'aar')
     //networks
     compile(name: 'baidu_ads', ext: 'aar')
     compile(name: 'sigmob_ads', ext: 'aar')
@@ -267,4 +267,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:recyclerview-v7:26.1.0'
+
 }
