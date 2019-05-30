@@ -25,18 +25,43 @@ THE SOFTWARE.
 ****************************************************************************/
 package org.cocos2dx.lua;
 
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.up.ads.UPAdsSdk;
 
 import org.cocos2dx.lib.Cocos2dxActivity;
 
+import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.Manifest.permission.REQUEST_INSTALL_PACKAGES;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 public class AppActivity extends Cocos2dxActivity {
     int count=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            if (ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                    || ContextCompat.checkSelfPermission(this, REQUEST_INSTALL_PACKAGES) != PackageManager.PERMISSION_GRANTED
+                    || ContextCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE, REQUEST_INSTALL_PACKAGES, READ_PHONE_STATE}, 001);
+            }
+
+        }
+
+        //初始化SDK
+
         UPAdsSdk.init(this, UPAdsSdk.UPAdsGlobalZone.UPAdsGlobalZoneDomestic);
 
         super.setEnableVirtualButton(false);
@@ -52,6 +77,11 @@ public class AppActivity extends Cocos2dxActivity {
 
         // DO OTHER INITIALIZATION BELOW
         
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 
